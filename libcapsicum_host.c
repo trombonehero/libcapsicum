@@ -255,8 +255,6 @@ lch_sandbox(int fd_sock, int fd_binary, int fd_rtld, u_int flags,
 	}
 
 	sbuf_finish(sbufp);
-	if (sbuf_overflowed(sbufp))
-		err(-1, "sbuf_overflowed()");
 	if (setenv("LD_LIBRARY_DIRS", sbuf_data(sbufp), 1) == -1)
 		err(-1, "Error in setenv(LD_LIBRARY_DIRS)");
 	sbuf_delete(sbufp);
@@ -274,8 +272,6 @@ lch_sandbox(int fd_sock, int fd_binary, int fd_rtld, u_int flags,
 	}
 
 	sbuf_finish(sbufp);
-	if (sbuf_overflowed(sbufp))
-		err(-1, "sbuf_overflowed()");
 	if (setenv("LD_PRELOAD", sbuf_data(sbufp), 1) == -1)
 		err(-1, "Error in setenv(LD_PRELOAD)");
 	sbuf_delete(sbufp);
