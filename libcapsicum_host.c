@@ -96,9 +96,7 @@ lch_sandbox(int fd_sock, int fd_binary, int fd_rtld, u_int flags,
 {
 	struct sbuf *sbufp;
 	int shmfd = -1;
-	size_t fdlistsize;
 	struct lc_fdlist *fds;
-	void *shm;
 
 	/*
 	 * Inform the run-time linked of the binary's name.
@@ -195,27 +193,8 @@ lch_sandbox(int fd_sock, int fd_binary, int fd_rtld, u_int flags,
 	    &pos) < 0)
 		err(-1, "Error in lc_fdlist_lookup(fdlist)");
 
-	char tmp[8];
-	sprintf(tmp, "%d", shmfd);
-	if (setenv(LIBCAPSICUM_SANDBOX_FDLIST, tmp, 1) == -1)
-		err(-1, "Error in setenv(LIBCAPSICUM_SANDBOX_FDLIST)");
-
-	/*
-	 * Map it and copy the list.
-	 */
-	fdlistsize = lc_fdlist_size(fds);
-	if (ftruncate(shmfd, fdlistsize) < 0)
-		err(-1, "Error in ftruncate(shmfd)");
-
-	shm = mmap(NULL, fdlistsize, PROT_READ | PROT_WRITE,
-	    MAP_NOSYNC | MAP_SHARED, shmfd, 0);
-	if (shm == MAP_FAILED)
-		err(-1, "Error mapping fdlist SHM");
-
-	memcpy(shm, _lc_fdlist_getstorage(fds), fdlistsize);
-	if (munmap(shm, fdlistsize))
-		err(-1, "Error in munmap(shm, fdlistsize)");
-
+	if (lc_fdlist_set_global(fds, shmfd) != 0)
+		err(-1, "Error in lc_fdlist_set_global()");
 
 	/*
 	 * Find RTLD.
@@ -231,6 +210,7 @@ lch_sandbox(int fd_sock, int fd_binary, int fd_rtld, u_int flags,
 	    &fd_binary, NULL) < 0)
 		err(-1, "Error in lc_fdlist_lookup(Executable)");
 
+	char tmp[8];
 	sprintf(tmp, "%d", fd_binary);
 	if (setenv("LD_BINARY", tmp, 1) != 0)
 		err(-1, "Error in setenv(LD_BINARY)");

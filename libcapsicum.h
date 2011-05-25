@@ -50,6 +50,7 @@ struct lc_host;
 struct lc_fdlist;
 struct lc_fdlist	*lc_fdlist_new(void);
 struct lc_fdlist	*lc_fdlist_global(void);
+int			 lc_fdlist_set_global(struct lc_fdlist *fds, int shmfd);
 struct lc_fdlist	*lc_fdlist_dup(struct lc_fdlist *lfp_orig);
 void			 lc_fdlist_free(struct lc_fdlist *lfp);
 void			 lc_fdlist_print(struct lc_fdlist *lfp, int outFD);

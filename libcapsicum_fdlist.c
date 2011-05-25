@@ -38,6 +38,7 @@
 #include <sys/stat.h>
 
 #define _WITH_DPRINTF
+#include <err.h>
 #include <errno.h>
 #include <libcapsicum.h>
 #include <pthread.h>
@@ -135,6 +136,45 @@ fail:
 	UNLOCK(&global_fdlist);
 	return (NULL);
 }
+
+int
+lc_fdlist_set_global(struct lc_fdlist *fds, int shmfd)
+{
+	size_t fdlistsize;
+	void *shm;
+
+	if ((fds == NULL) || (shmfd < 0)) {
+		errno = EINVAL;
+		return (-1);
+	}
+
+	/*
+	 * Set an environment variable to say where we've put the FD list.
+	 */
+	char tmp[8];
+	sprintf(tmp, "%d", shmfd);
+	if (setenv(LIBCAPSICUM_SANDBOX_FDLIST, tmp, 1) == -1)
+		err(-1, "Error in setenv(LIBCAPSICUM_SANDBOX_FDLIST)");
+
+	/*
+	 * Map the shared memory and copy the list.
+	 */
+	fdlistsize = lc_fdlist_size(fds);
+	if (ftruncate(shmfd, fdlistsize) < 0)
+		err(-1, "Error in ftruncate(shmfd)");
+
+	shm = mmap(NULL, fdlistsize, PROT_READ | PROT_WRITE,
+	    MAP_NOSYNC | MAP_SHARED, shmfd, 0);
+	if (shm == MAP_FAILED)
+		err(-1, "Error mapping fdlist SHM");
+
+	memcpy(shm, _lc_fdlist_getstorage(fds), fdlistsize);
+	if (munmap(shm, fdlistsize))
+		err(-1, "Error in munmap(shm, fdlistsize)");
+
+	return (0);
+}
+
 
 #define INITIAL_ENTRIES		16
 #define INITIAL_NAMEBYTES	(64 * INITIAL_ENTRIES)
