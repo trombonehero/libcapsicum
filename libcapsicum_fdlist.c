@@ -461,6 +461,11 @@ lc_fdlist_lookup(struct lc_fdlist *lfp, const char *subsystem,
 {
 	struct lc_fdlist_storage *lfsp;
 
+	if (lfp == NULL) {
+		errno = EINVAL;
+		return (-1);
+	}
+
 	LOCK(lfp);
 	lfsp = lfp->lf_storage;
 	if ((pos != NULL) && (*pos >= (int)lfsp->count)) {
