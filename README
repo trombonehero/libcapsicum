@@ -1,0 +1,10 @@
+This is userspace code intended to make Capsicum easy to use correctly.
+
+NOTE: the libcapsicum API is NOT stable, and may change at ANY time.
+
+1. Easy to Use
+libcapsicum provides a higher-level API than the kernel Capsicum primitives. It should be easier to use libcapsicum to say, "I want to start a sandbox running this stuff over here" than to program to the kernel API directly.
+
+2. Easy to Use Correctly
+There are lots of gotchas when compartmentalizing software: did you close all the files that you don't want the sandbox to access? Did libraries open any files that you're not aware of? Has anything sensitive been mapped into the address space without your knowledge? libcapsicum closes all file descriptors except the ones that you explicitly delegate, and it scrubs the address space with fexecve().
+
