@@ -1,0 +1,2 @@
+libcapsicum provides a developer-friendly wrapper of the Capsicum kernel API, making it easier
+to create sandboxes without accidentally leaking resources into the sandbox.

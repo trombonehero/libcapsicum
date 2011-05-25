@@ -1,0 +1,9 @@
+lib/libcapsicum.a
+lib/libcapsicum_p.a
+lib/libcapsicum.so.1
+lib/libcapsicum.so
+include/libcapsicum.h
+share/man/man3/libcapsicum.3.gz
+share/man/man3/libcapsicum_fdlist.3.gz
+share/man/man3/libcapsicum_host.3.gz
+share/man/man3/libcapsicum_sandbox.3.gz
