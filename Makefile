@@ -14,7 +14,7 @@ SRCS=					\
 
 INCS=	libcapsicum.h
 
-CFLAGS+=	-I.
+CFLAGS+=	-I ${.CURDIR}
 
 SHLIB_MAJOR=	1
 
