@@ -6,6 +6,8 @@ SRCS=	\
 
 NO_MAN=
 
+CSTD?=	c99
+
 # Use headers and libc from the build, if available.
 KERNCONF?=	GENERIC
 OBJROOT=	${.OBJDIR}/../../../../
@@ -13,7 +15,7 @@ OBJKERN=	${OBJROOT}/sys/${KERNCONF}
 
 SRCROOT=	${.CURDIR}/../../../../
 
-CFLAGS+=	-I${OBJKERN} -I${SRCROOT}/sys
-LDFLAGS+=	-L${OBJROOT}/lib/libc -lc
+CFLAGS+=	-I${.CURDIR}/../src
+LDFLAGS+=	-L../src -lcapsicum
 
 .include <bsd.prog.mk>
