@@ -1,5 +1,3 @@
-# $FreeBSD$
-
 LIB=	capsicum
 DPADD=	${LIBSBUF}
 LDADD=	-lsbuf

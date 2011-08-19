@@ -2,8 +2,6 @@
 # Date created:        15 May 2011
 # Whom:                jonathan
 #
-# $FreeBSD$
-#
 
 PORTNAME=      libcapsicum
 PORTVERSION=   0.1alpha

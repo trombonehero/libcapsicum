@@ -3,10 +3,6 @@
  * Copyright (c) 2010 Robert N. M. Watson
  * All rights reserved.
  *
- * WARNING: THIS IS EXPERIMENTAL SECURITY SOFTWARE THAT MUST NOT BE RELIED
- * ON IN PRODUCTION SYSTEMS.  IT WILL BREAK YOUR SOFTWARE IN NEW AND
- * UNEXPECTED WAYS.
- *
  * This software was developed at the University of Cambridge Computer
  * Laboratory with support from a grant from Google, Inc.
  *
@@ -30,8 +26,6 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- * $P4: //depot/projects/trustedbsd/capabilities/src/lib/libcapsicum/libcapsicum_fdlist.c#15 $
  */
 
 #include <sys/mman.h>

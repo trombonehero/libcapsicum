@@ -1,5 +1,3 @@
-# $FreeBSD$
-
 PROG=	test-libcapsicum
 SRCS=	test.c \
 
