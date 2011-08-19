@@ -100,7 +100,7 @@ _lc_receive_rights(struct msghdr *msg, int *fdp, int *fdcountp)
 			if (cmsg->cmsg_level != SOL_SOCKET ||
 			    cmsg->cmsg_type != SCM_RIGHTS)
 				continue;
-			cmsg_fdp = (int *)CMSG_DATA(cmsg);
+			cmsg_fdp = (int *)(void *)CMSG_DATA(cmsg);
 			fdcount = (cmsg->cmsg_len - CMSG_LEN(0)) /
 			    sizeof(int);
 			_lc_dispose_rights(cmsg_fdp, fdcount);
@@ -118,7 +118,7 @@ _lc_receive_rights(struct msghdr *msg, int *fdp, int *fdcountp)
 		if (cmsg->cmsg_level != SOL_SOCKET ||
 		    cmsg->cmsg_type != SCM_RIGHTS)
 			continue;
-		cmsg_fdp = (int *)CMSG_DATA(cmsg);
+		cmsg_fdp = (int *)(void *)CMSG_DATA(cmsg);
 		for (i = 0; i < fdcount; i++)
 			fdp[i] = cmsg_fdp[i];
 	}
@@ -174,12 +174,12 @@ _lc_send_rights(int fd, const void *msg, size_t len, int flags, int lc_flags,
 	iov.iov_len = len;
 
 	bzero(&cmsgbuf, sizeof(cmsgbuf));
-	cmsg = (struct cmsghdr *)cmsgbuf;
+	cmsg = (struct cmsghdr *)(void *)cmsgbuf;
 	cmsg->cmsg_len = CMSG_SPACE(fdcount * sizeof(int));
 	cmsg->cmsg_level = SOL_SOCKET;
 	cmsg->cmsg_type = SCM_RIGHTS;
 	for (i = 0; i < fdcount; i++)
-		((int *)CMSG_DATA(cmsg))[i] = fdp[i];
+		((int *)(void *)CMSG_DATA(cmsg))[i] = fdp[i];
 
 	bzero(&msghdr, sizeof(msghdr));
 	msghdr.msg_iov = &iov;
