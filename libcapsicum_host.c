@@ -56,19 +56,21 @@
 #include "libcapsicum_internal.h"
 #include "libcapsicum_sandbox_api.h"
 
-#define	LIBCAPSICUM_CAPMASK_SOCK	(CAP_EVENT | CAP_READ | CAP_WRITE)
-#define	LIBCAPSICUM_CAPMASK_BIN	(CAP_READ | CAP_EVENT | CAP_FSTAT | \
-					    CAP_FSTATFS | \
-					    CAP_FEXECVE | CAP_MMAP | \
-					    CAP_MAPEXEC)
-#define	LIBCAPSICUM_CAPMASK_SANDBOX	LIBCAPSICUM_CAPMASK_BIN
-#define	LIBCAPSICUM_CAPMASK_LDSO	LIBCAPSICUM_CAPMASK_BIN
-#define LIBCAPSICUM_CAPMASK_LIBDIR	LIBCAPSICUM_CAPMASK_BIN \
-					 | CAP_LOOKUP | CAP_ATBASE
-#define LIBCAPSICUM_CAPMASK_FDLIST	CAP_READ | CAP_WRITE | CAP_FTRUNCATE \
-					 | CAP_FSTAT | CAP_MMAP
+#define	LIBCAPSICUM_CAPMASK_SOCK 					\
+	(CAP_POLL_KEVENT | CAP_READ | CAP_WRITE)
 
-#define LIBCAPSICUM_CAPMASK_STDOUT	CAP_WRITE | CAP_SEEK | CAP_FSTAT
+#define	LIBCAPSICUM_CAPMASK_BIN	\
+	(CAP_READ | CAP_POLL_KEVENT | CAP_FSTAT | CAP_FSTATFS |		\
+	 CAP_FEXECVE | CAP_MMAP | CAP_MAPEXEC)
+
+#define LIBCAPSICUM_CAPMASK_LIBDIR					\
+	LIBCAPSICUM_CAPMASK_BIN | CAP_LOOKUP
+
+#define LIBCAPSICUM_CAPMASK_FDLIST					\
+	CAP_READ | CAP_WRITE | CAP_FTRUNCATE | CAP_FSTAT | CAP_MMAP
+
+#define LIBCAPSICUM_CAPMASK_STDOUT					\
+	CAP_WRITE | CAP_SEEK | CAP_FSTAT
 
 extern char **environ;
 
@@ -141,11 +143,11 @@ lch_sandbox(int fd_sock, int fd_binary, int fd_rtld, u_int flags,
 		err(-1, "Error in lc_fdlist_addcap(shmfd)");
 
 	if (lc_fdlist_addcap(fds, RTLD_CAP_FQNAME, "rtld", "",
-	                     fd_rtld, LIBCAPSICUM_CAPMASK_LDSO) < 0)
+	                     fd_rtld, LIBCAPSICUM_CAPMASK_BIN) < 0)
 		err(-1, "Error in lc_fdlist_addcap(fd_rtld)");
 
 	if (lc_fdlist_addcap(fds, RTLD_CAP_FQNAME, "Executable", binname,
-	                     fd_binary, LIBCAPSICUM_CAPMASK_SANDBOX) < 0)
+	                     fd_binary, LIBCAPSICUM_CAPMASK_BIN) < 0)
 		err(-1, "Error in lc_fdlist_addcap(fd_binary)");
 
 	/*
