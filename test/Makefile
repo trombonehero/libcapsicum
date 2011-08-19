@@ -1,5 +1,8 @@
 PROG=	test-libcapsicum
-SRCS=	test.c \
+SRCS=	\
+	ctest.c \
+	main.c \
+	fdlist.c \
 
 NO_MAN=
 
