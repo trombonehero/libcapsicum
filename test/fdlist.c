@@ -23,8 +23,8 @@ test_fdlist()
 
 	REQUIRE(fd = open("/tmp/libcapsicum.fdlist", O_RDWR | O_CREAT));
 
-	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_add(fdlistp,
-	    subsystem, classname, "raw", fd));
+	CHECK(lc_fdlist_add(fdlistp,
+	    subsystem, classname, "raw", fd) == 0);
 
 	return success;
 }
