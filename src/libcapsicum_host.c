@@ -303,7 +303,7 @@ lch_startfd(int fd_binary, const char *binname, char *const argv[],
 		goto out_error;
 	}
 
-	pid = pdfork(&fd_procdesc);
+	pid = pdfork(&fd_procdesc, 0);
 	if (pid < 0) {
 		fd_procdesc = -1;
 		goto out_error;
