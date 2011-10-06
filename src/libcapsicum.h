@@ -87,10 +87,11 @@ int	lc_fdlist_addcap(struct lc_fdlist *l, const char *subsystem,
 /*
  * Open a stored file descriptor.
  *
- * Given a filename '/foo/bar/fubar', this function will attempt to find the file
- * in the FD list. If that fails, it will attempt to find a parent directory in the
- * FD list and supply a filename relative to that FD (which will be a pointer to a
- * location within the supplied filename - do NOT free it!).
+ * Given a filename '/foo/bar/fubar', this function will attempt to find the
+ * file in the FD list. If that fails, it will attempt to find a parent
+ * directory in the FD list and supply a filename relative to that FD (which
+ * will be a pointer to a location within the supplied filename - do NOT
+ * free it!).
  */
 int
 lc_fdlist_find(struct lc_fdlist *lfp, const char *subsystem,
