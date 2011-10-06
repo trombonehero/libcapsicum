@@ -31,6 +31,26 @@ test_fdlist()
 	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_add,
 	    fdlistp, subsystem, classname, "raw", fd);
 
+	char *relative_name;
+	int found;
+	REQUIRE(found = lc_fdlist_find(
+	    fdlistp, subsystem, classname, "raw", &relative_name));
+
+	CHECK(found == fd);
+	CHECK(strnlen(relative_name, 1) == 0);
+
+	// Check lc_fdlist_addcap().
+	cap_rights_t rights = CAP_READ | CAP_SEEK;
+	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_addcap,
+	    fdlistp, subsystem, classname, "raw_cap", fd, rights);
+
+	REQUIRE(found = lc_fdlist_find(
+	    fdlistp, subsystem, classname, "raw_cap", &relative_name));
+
+	cap_rights_t rights_out;
+	CHECK_SYSCALL_SUCCEEDS(cap_getrights, found, &rights_out);
+	CHECK(rights_out == rights);
+
 	return success;
 }
 
