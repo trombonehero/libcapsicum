@@ -1,5 +1,9 @@
+#include <string.h>
+#include <unistd.h>
+
 #include <libcapsicum.h>
 
+#include "ctest.h"
 #include "tests.h"
 
 int
@@ -19,9 +23,10 @@ test_fdlist()
 	// What we want is to be able to install an fdlist as the global one
 	// without mucking about with shared memory segments ourselves.
 
-	CHECK(lc_fdlist_size(fdlistp) == 0);
-
-	REQUIRE(fd = open("/tmp/libcapsicum.fdlist", O_RDWR | O_CREAT));
+	// Create a temporary file to put in the FD list.
+	char tmpfilename[80];
+	strncpy(tmpfilename, "/tmp/libcapsicum.test.XXXX", sizeof(tmpfilename));
+	REQUIRE(fd = mkstemp(tmpfilename));
 
 	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_add,
 	    fdlistp, subsystem, classname, "raw", fd);
