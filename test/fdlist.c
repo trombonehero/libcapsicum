@@ -13,7 +13,7 @@ test_fdlist()
 
 	CHECK(lc_fdlist_global() == 0);
 
-	fdlistp = lc_fdlist_global();
+	fdlistp = lc_fdlist_new();
 	CHECK(fdlistp != 0);
 
 	// What we want is to be able to install an fdlist as the global one
