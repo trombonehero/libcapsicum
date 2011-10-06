@@ -28,6 +28,7 @@ test_fdlist()
 	strncpy(tmpfilename, "/tmp/libcapsicum.test.XXXX", sizeof(tmpfilename));
 	REQUIRE(fd = mkstemp(tmpfilename));
 
+	// Ensure that lc_fdlist_add() works.
 	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_add,
 	    fdlistp, subsystem, classname, "raw", fd);
 
