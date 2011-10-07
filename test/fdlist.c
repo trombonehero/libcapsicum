@@ -60,14 +60,14 @@ test_fdlist()
 
 	// Check relative lookup.
 	const char dirname[] = "/tmp/";
-	char *relative = tmpfilename + sizeof(dirname);
 	char dirfd = open(dirname, O_RDONLY);
 
 	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_addcap,
-	    fdlistp, subsystem, classname, relative, fd, rights | CAP_LOOKUP);
+	    fdlistp, subsystem, classname, dirname, fd,
+	    rights | CAP_LOOKUP);
 
 	REQUIRE(found = lc_fdlist_find(
-	    fdlistp, subsystem, classname, relative, &relative_name));
+	    fdlistp, subsystem, classname, tmpfilename, &relative_name));
 
 	struct stat found_stat;
 	CHECK_SYSCALL_SUCCEEDS(fstat, found, &found_stat);
