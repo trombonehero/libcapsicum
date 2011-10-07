@@ -21,6 +21,6 @@ LDFLAGS+=	-L../src -lcapsicum
 
 all: ${PROG} run_tests
 run_tests:
-	sh ${.CURDIR}/test.t
+	sh ${.CURDIR}/test.t || exit 1
 
 .include <bsd.prog.mk>

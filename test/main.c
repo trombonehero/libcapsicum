@@ -12,7 +12,6 @@ main(int argc, char *argv[])
 {
 	int i = argc;
 
-	run_all_tests(test_count, all_tests, argc, argv);
 
-	return 0;
+	return (run_all_tests(test_count, all_tests, argc, argv) != PASSED);
 }
