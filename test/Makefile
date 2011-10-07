@@ -4,6 +4,7 @@ SRCS=	\
 	ctest.c \
 	main.c \
 	fdlist.c \
+	startfd.c \
 
 NO_MAN=
 

@@ -29,6 +29,9 @@
 
 #include "ctest.h"
 
+#define	SANDBOX_MAGIC	42
+
 int	test_fdlist(void);
+int	test_startfd(void);
 
 #endif /* CAP_TEST_H */
