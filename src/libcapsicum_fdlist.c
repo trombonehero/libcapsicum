@@ -466,9 +466,8 @@ lc_fdlist_find(struct lc_fdlist *lfp, const char *subsystem,
 		                     &dirname, &fd, &pos) == -1)
 			return (-1);
 
-		len = strlen(dirname);
-
 		/* if there is no filename, we can't do relative naming */
+		len = strlen(dirname);
 		if (len == 0)
 		{
 			fd = -1;
