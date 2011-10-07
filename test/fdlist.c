@@ -32,7 +32,7 @@ test_fdlist()
 	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_add,
 	    fdlistp, subsystem, classname, "raw", fd);
 
-	char *relative_name;
+	const char *relative_name;
 	int found;
 	REQUIRE(found = lc_fdlist_find(
 	    fdlistp, subsystem, classname, "raw", &relative_name));
