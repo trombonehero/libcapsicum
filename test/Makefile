@@ -19,4 +19,8 @@ SRCROOT=	${.CURDIR}/../../../../
 CFLAGS+=	-I${.CURDIR}/../src
 LDFLAGS+=	-L../src -lcapsicum
 
+all: ${PROG} run_tests
+run_tests:
+	sh ${.CURDIR}/test.t
+
 .include <bsd.prog.mk>
