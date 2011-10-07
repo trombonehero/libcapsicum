@@ -7,18 +7,23 @@
 
 #include "ctest.h"
 
-void
+int
 run_all_tests(size_t count, struct test *tests, int argc, char *argv[])
 {
+	int success = PASSED;
+
 	/*
 	 * If no tests have been specified at the command line, run them all.
 	 */
 	if (argc == 1) {
 		printf("1..%zu\n", count);
 
-		for (size_t i = 0; i < count; i++)
-			execute(i + 1, tests + i);
-		return;
+		for (size_t i = 0; i < count; i++) {
+			int result = execute(i + 1, tests + i);
+			if ((success == PASSED) && (result != PASSED))
+				success = FAILED;
+		}
+		return success;
 	}
 
 	/*
@@ -32,7 +37,10 @@ run_all_tests(size_t count, struct test *tests, int argc, char *argv[])
 			if (strncmp(argv[i], tests[j].t_name,
 			    strlen(argv[i])) == 0) {
 				found = 1;
-				execute(i, tests + j);
+
+				int result = execute(i, tests + j);
+				if ((success == PASSED) && (result != PASSED))
+					success = FAILED;
 				break;
 			}
 		}
@@ -40,6 +48,8 @@ run_all_tests(size_t count, struct test *tests, int argc, char *argv[])
 		if (found == 0)
 			errx(-1, "No such test '%s'", argv[i]);
 	}
+
+	return success;
 }
 
 int

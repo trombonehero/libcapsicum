@@ -162,6 +162,6 @@ int	execute(int id, struct test*);
  * This function will output strings according to the FreeBSD regression test
  * standard ("1..n" followed by "ok 1 - name1" "not ok 2 - name2").
  */
-void	run_all_tests(size_t count, struct test *tests, int argc, char *argv[]);
+int	run_all_tests(size_t count, struct test *tests, int argc, char *argv[]);
 
 #endif /* CAP_TEST_H */
