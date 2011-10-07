@@ -12,6 +12,7 @@ int
 test_fdlist()
 {
 	int success = PASSED;
+	cap_rights_t rights = CAP_READ | CAP_SEEK | CAP_FSTAT;
 	const char *subsystem = "org.freebsd.libcapsicum.test";
 	const char *classname = "File";
 	struct lc_fdlist *fdlistp;
@@ -32,6 +33,17 @@ test_fdlist()
 	REQUIRE(fd = mkstemp(tmpfilename));
 	CHECK_SYSCALL_SUCCEEDS(fstat, fd, &tmpfile_stat);
 
+	// Put the temporary file's parent in the fdlist for relative lookup.
+	const char dirname[] = "/tmp";
+	int dirfd = open(dirname, O_RDONLY);
+
+	struct stat dirstat;
+	CHECK_SYSCALL_SUCCEEDS(fstat, dirfd, &dirstat);
+
+	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_addcap,
+	    fdlistp, subsystem, classname, dirname, dirfd,
+	    rights | CAP_LOOKUP);
+
 	// Ensure that lc_fdlist_add() works.
 	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_add,
 	    fdlistp, subsystem, classname, "raw", fd);
@@ -45,7 +57,6 @@ test_fdlist()
 	CHECK(strnlen(relative_name, 1) == 0);
 
 	// Check lc_fdlist_addcap().
-	cap_rights_t rights = CAP_READ | CAP_SEEK | CAP_FSTAT;
 	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_addcap,
 	    fdlistp, subsystem, classname, "raw_cap", fd, rights);
 
@@ -58,20 +69,20 @@ test_fdlist()
 	CHECK_SYSCALL_SUCCEEDS(cap_getrights, found, &rights_out);
 	CHECK(rights_out == rights);
 
-	// Check relative lookup.
-	const char dirname[] = "/tmp/";
-	char dirfd = open(dirname, O_RDONLY);
-
-	CHECK_SYSCALL_SUCCEEDS(lc_fdlist_addcap,
-	    fdlistp, subsystem, classname, dirname, fd,
-	    rights | CAP_LOOKUP);
-
+	// Check relative lookup: we should find the parent dir, relative to
+	// which we can open the actual file.
 	REQUIRE(found = lc_fdlist_find(
 	    fdlistp, subsystem, classname, tmpfilename, &relative_name));
 
+	CHECK(strncmp(relative_name, tmpfilename + sizeof(dirname), 80)
+		== 0);
+
 	struct stat found_stat;
 	CHECK_SYSCALL_SUCCEEDS(fstat, found, &found_stat);
-	CHECK(found_stat.st_ino == tmpfile_stat.st_ino);
+	CHECK(found_stat.st_ino == dirstat.st_ino);
+
+	REQUIRE(found = openat(found, relative_name, O_RDONLY));
+	CHECK_SYSCALL_SUCCEEDS(fstat, found, &found_stat);
 
 	return success;
 }
