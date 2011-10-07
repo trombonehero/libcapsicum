@@ -164,13 +164,4 @@ int	execute(int id, struct test*);
  */
 void	run_all_tests(size_t count, struct test *tests, int argc, char *argv[]);
 
-int	test_capmode(void);
-int	test_capabilities(void);
-int	test_fcntl(void);
-int	test_pdfork(void);
-int	test_pdkill(void);
-int	test_pdwait(void);
-int	test_relative(void);
-int	test_sysctl(void);
-
 #endif /* CAP_TEST_H */
