@@ -48,6 +48,8 @@ test_fdlist()
 	REQUIRE(found = lc_fdlist_find(
 	    fdlistp, subsystem, classname, "raw_cap", &relative_name));
 
+	CHECK(found != fd);
+
 	cap_rights_t rights_out;
 	CHECK_SYSCALL_SUCCEEDS(cap_getrights, found, &rights_out);
 	CHECK(rights_out == rights);
