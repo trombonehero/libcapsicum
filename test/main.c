@@ -10,8 +10,5 @@ int test_count = sizeof(all_tests) / sizeof(struct test);
 int
 main(int argc, char *argv[])
 {
-	int i = argc;
-
-
 	return (run_all_tests(test_count, all_tests, argc, argv) != PASSED);
 }
