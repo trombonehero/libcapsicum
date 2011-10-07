@@ -16,7 +16,7 @@ OBJKERN=	${OBJROOT}/sys/${KERNCONF}
 
 SRCROOT=	${.CURDIR}/../../../../
 
-CFLAGS+=	-I${.CURDIR}/../src
+CFLAGS+=	-Wall -Werror -I${.CURDIR}/../src
 LDFLAGS+=	-L../src -lcapsicum
 
 all: ${PROG} run_tests
