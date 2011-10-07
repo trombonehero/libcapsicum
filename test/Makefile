@@ -1,4 +1,5 @@
 PROG=	test-libcapsicum
+INTERNALPROG=	yes
 SRCS=	\
 	ctest.c \
 	main.c \
